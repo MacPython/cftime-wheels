@@ -72,7 +72,7 @@ test_script:
   - mkdir tmp
   - cd tmp
   - pip install pytest
-  - pytest --pyargs cftime
+  - pytest -v ../cftime
   - cd ..
 
 after_test:
