@@ -71,8 +71,8 @@ test_script:
   # Run some tests
   - mkdir tmp
   - cd tmp
-  - pip install pytest
-  - pytest -v ../cftime
+  - pip install pytest pytest-cov
+  - pytest -vv test
   - cd ..
 
 after_test:
