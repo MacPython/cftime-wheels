@@ -85,5 +85,5 @@ on_success:
   # disable the ssl checks.
   - pip install wheelhouse-uploader
   - python -m wheelhouse_uploader upload
-    --local-folder=dist --no-update-index
+    --no-ssl-check --local-folder=dist --no-update-index
     wheels
