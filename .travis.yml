@@ -1,7 +1,7 @@
 env:
   global:
       - REPO_DIR="cftime"
-      - BUILD_COMMIT=v1.0.3
+      - BUILD_COMMIT=v1.0.3rel
       - PLAT=x86_64
       - UNICODE_WIDTH=32
       - WHEELHOUSE_UPLOADER_USERNAME=travis-worker
