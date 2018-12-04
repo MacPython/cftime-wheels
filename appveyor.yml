@@ -13,9 +13,10 @@ environment:
       # Remember to edit .travis.yml too
       BUILD_COMMIT: v1.0.3rel
       WHEELHOUSE_UPLOADER_USERNAME: travis-worker
+      # 9s0gdDGnNnTt7hvyNpn0/ZzOMGPdwPp2SewFTfGzYk7uI+rdAN9rFq2D1gAP4NQh
       WHEELHOUSE_UPLOADER_SECRET:
         secure:
-            9s0gdDGnNnTt7hvyNpn0/ZzOMGPdwPp2SewFTfGzYk7uI+rdAN9rFq2D1gAP4NQh
+            "jBM5bVlciv3VGGBhhilljF5UlPVlsSDdody9CSSM7FMbX14EKzLFnGwQCsRRHUtGKVTjveT+u6I4Vq6ieEc6D21EUSU99mmN7Z0FnD6D0FMdmPsH8Eb8m6YvMlF7ypYqDS05awCiiU4QiYix4jv0I0oPaVTRz+1jW/1niZNlIb9pwyJwv7YuiIfpSuG084gkTNjkWhjE2jTJD0KyJ0n+PL3DT+a6AFsU7Y84RhgR/Nc/fPu1mcxcn4zJCdzP6isuQz+1AgrPKxnCqyphynFe9pRx7tp7v7+lNzkMozI5EVaYrGrVEfMIeuhFiCBhMjPpzlxxE4Gn/dCcz1xi8dkLUSYbq0Enf78lcbMurky5zP45sfFOtWBMUuj4WNhjL2C3S5bfgmJ7/OG9zJOLRbLZm8L4pMMNkUxsXsuq5wacgk9n3tajv1MVqdOhg101YrUsqP7LCAsDSSTQOI3c8m2CKLtKeg1kv26ONUnfTODrc53ABtfFr4kuDtrD/lRkRxC+IfgFPzGkkuZbmnr3zwkCPYOhvYCAwS2aDAImNHDJmyYW23ujodMPnU+4KLupiT19EDNgWl0Zu1wh0Vmb0t6aLKGpCfMSA+n6tY+kHX6gdG8CW5K1h/c4OD4szkWDWtAi6z2NXYvwyT0w+6UBDEK1t8ucMhhsYKhSz8CkrS2DfA4="
 
     matrix:
     - PYTHON: C:\Python37
@@ -83,7 +84,7 @@ on_success:
   # Upload the generated wheel package to Rackspace
   # On Windows, Apache Libcloud cannot find a standard CA cert bundle so we
   # disable the ssl checks.
-  - pip install wheelhouse-uploader certifi
+  - pip install wheelhouse-uploader
   - python -m wheelhouse_uploader upload
     --local-folder=dist --no-update-index
     wheels
