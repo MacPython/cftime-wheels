@@ -13,9 +13,9 @@ environment:
       # Remember to edit .travis.yml too
       BUILD_COMMIT: v1.0.3rel
       WHEELHOUSE_UPLOADER_USERNAME: travis-worker
+      # Encrypted to matthew.brett+unidata account.
       WHEELHOUSE_UPLOADER_SECRET:
-        secure:
-            9s0gdDGnNnTt7hvyNpn0/ZzOMGPdwPp2SewFTfGzYk7uI+rdAN9rFq2D1gAP4NQh
+          secure: cjCK4SGwxqbIPBtXR8re6qmGjk+vv9Ked/e7RJfBM6OmnLtGcWk0YD4jMkOdMWpe
 
     matrix:
     - PYTHON: C:\Python37
