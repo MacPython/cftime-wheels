@@ -15,7 +15,7 @@ environment:
       WHEELHOUSE_UPLOADER_USERNAME: travis-worker
       # Encrypted to matthew.brett+unidata account.
       WHEELHOUSE_UPLOADER_SECRET:
-          secure: cjCK4SGwxqbIPBtXR8re6qmGjk+vv9Ked/e7RJfBM6OmnLtGcWk0YD4jMkOdMWpe
+          secure: H46gyfPdKSfXRfADNnvwJRfqX9vyHoeM16shc19GdWQLMHLl8CADY60SBnNm4fjE
 
     matrix:
     - PYTHON: C:\Python38
