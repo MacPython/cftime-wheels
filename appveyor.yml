@@ -18,6 +18,8 @@ environment:
           secure: cjCK4SGwxqbIPBtXR8re6qmGjk+vv9Ked/e7RJfBM6OmnLtGcWk0YD4jMkOdMWpe
 
     matrix:
+    - PYTHON: C:\Python38
+    - PYTHON: C:\Python38-x64
     - PYTHON: C:\Python37
     - PYTHON: C:\Python37-x64
     - PYTHON: C:\Python36
