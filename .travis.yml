@@ -39,13 +39,6 @@ matrix:
         - UNICODE_WIDTH=16
     - os: linux
       env:
-        - MB_PYTHON_VERSION=3.4
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.4
-        - PLAT=i686
-    - os: linux
-      env:
         - MB_PYTHON_VERSION=3.5
     - os: linux
       env:
@@ -64,6 +57,13 @@ matrix:
     - os: linux
       env:
         - MB_PYTHON_VERSION=3.7
+        - PLAT=i686
+    - os: linux
+      env:
+        - MB_PYTHON_VERSION=3.8
+    - os: linux
+      env:
+        - MB_PYTHON_VERSION=3.8
         - PLAT=i686
     - os: osx
       language: generic
@@ -71,10 +71,6 @@ matrix:
     - os: osx
       language: generic
       env:
-        - MB_PYTHON_VERSION=3.4
-    - os: osx
-      language: generic
-      env:
         - MB_PYTHON_VERSION=3.5
     - os: osx
       language: generic
@@ -84,6 +80,10 @@ matrix:
       language: generic
       env:
         - MB_PYTHON_VERSION=3.7
+    - os: osx
+      language: generic
+      env:
+        - MB_PYTHON_VERSION=3.8
 
 before_install:
     - BUILD_DEPENDS="Cython"
