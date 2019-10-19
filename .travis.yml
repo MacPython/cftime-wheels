@@ -4,6 +4,8 @@ env:
       - BUILD_COMMIT=v1.0.4rel
       - PLAT=x86_64
       - UNICODE_WIDTH=32
+      - NP_BUILD_DEP="numpy==1.13.3"
+      - NP_TEST_DEP="numpy==1.13.3"
       - WHEELHOUSE_UPLOADER_USERNAME=travis-worker
       # Following generated with
       # travis encrypt -r MacPython/cftime-wheels WHEELHOUSE_UPLOADER_SECRET=<the API key>
@@ -54,17 +56,25 @@ matrix:
     - os: linux
       env:
         - MB_PYTHON_VERSION=3.7
+        - NP_BUILD_DEP="numpy==1.14.5"
+        - NP_TEST_DEP="numpy==1.14.5"
     - os: linux
       env:
         - MB_PYTHON_VERSION=3.7
         - PLAT=i686
+        - NP_BUILD_DEP="numpy==1.14.5"
+        - NP_TEST_DEP="numpy==1.14.5"
     - os: linux
       env:
         - MB_PYTHON_VERSION=3.8
+        - NP_BUILD_DEP=numpy==1.17.3
+        - NP_TEST_DEP=numpy==1.17.3
     - os: linux
       env:
         - MB_PYTHON_VERSION=3.8
         - PLAT=i686
+        - NP_BUILD_DEP=numpy==1.17.3
+        - NP_TEST_DEP=numpy==1.17.3
     - os: osx
       language: generic
       env: MB_PYTHON_VERSION=2.7
@@ -80,14 +90,18 @@ matrix:
       language: generic
       env:
         - MB_PYTHON_VERSION=3.7
+        - NP_BUILD_DEP="numpy==1.14.5"
+        - NP_TEST_DEP="numpy==1.14.5"
     - os: osx
       language: generic
       env:
         - MB_PYTHON_VERSION=3.8
+        - NP_BUILD_DEP=numpy==1.17.3
+        - NP_TEST_DEP=numpy==1.17.3
 
 before_install:
-    - BUILD_DEPENDS="Cython"
-    - TEST_DEPENDS="pytest pytest-cov"
+    - BUILD_DEPENDS="$NP_BUILD_DEP Cython"
+    - TEST_DEPENDS="$NP_TEST_DEP pytest pytest-cov"
     - source multibuild/common_utils.sh
     - source multibuild/travis_steps.sh
     - before_install
