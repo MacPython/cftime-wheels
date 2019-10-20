@@ -1,6 +1,6 @@
 [submodule "multibuild"]
 	path = multibuild
-	url = https://github.com/matthew-brett/multibuild
+	url = https://github.com/jswhit/multibuild
 [submodule "cftime"]
 	path = cftime
 	url = https://github.com/Unidata/cftime
