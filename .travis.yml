@@ -116,8 +116,8 @@ matrix:
 before_install:
     - BUILD_DEPENDS="$NP_BUILD_DEP Cython"
     - TEST_DEPENDS="$NP_TEST_DEP pytest pytest-cov"
-    - source multibuild/common_utils.sh
     - source multibuild/travis_steps.sh
+    - source multibuild/common_utils.sh
     - before_install
 
 install:
