@@ -9,7 +9,7 @@ The travis-ci interface for the builds is
 https://travis-ci.org/MacPython/cftime-wheels
 
 Appveyor interface at
-https://ci.appveyor.com/project/MatthewBrett/cftime-wheels
+https://ci.appveyor.com/project/jswhit/cftime-wheels
 
 The driving github repository is
 https://github.com/MacPython/cftime-wheels
