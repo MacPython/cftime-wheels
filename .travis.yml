@@ -1,7 +1,7 @@
 env:
   global:
       - REPO_DIR="cftime"
-      - BUILD_COMMIT=v1.0.4rel
+      - BUILD_COMMIT=1.0.4rel
       - PLAT=x86_64
       - UNICODE_WIDTH=32
       - NP_BUILD_DEP="numpy==1.13.3"
