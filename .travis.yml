@@ -10,9 +10,11 @@ env:
       # Following generated with
       # travis encrypt -r MacPython/cftime-wheels WHEELHOUSE_UPLOADER_SECRET=<the API key>
       - secure: "jBM5bVlciv3VGGBhhilljF5UlPVlsSDdody9CSSM7FMbX14EKzLFnGwQCsRRHUtGKVTjveT+u6I4Vq6ieEc6D21EUSU99mmN7Z0FnD6D0FMdmPsH8Eb8m6YvMlF7ypYqDS05awCiiU4QiYix4jv0I0oPaVTRz+1jW/1niZNlIb9pwyJwv7YuiIfpSuG084gkTNjkWhjE2jTJD0KyJ0n+PL3DT+a6AFsU7Y84RhgR/Nc/fPu1mcxcn4zJCdzP6isuQz+1AgrPKxnCqyphynFe9pRx7tp7v7+lNzkMozI5EVaYrGrVEfMIeuhFiCBhMjPpzlxxE4Gn/dCcz1xi8dkLUSYbq0Enf78lcbMurky5zP45sfFOtWBMUuj4WNhjL2C3S5bfgmJ7/OG9zJOLRbLZm8L4pMMNkUxsXsuq5wacgk9n3tajv1MVqdOhg101YrUsqP7LCAsDSSTQOI3c8m2CKLtKeg1kv26ONUnfTODrc53ABtfFr4kuDtrD/lRkRxC+IfgFPzGkkuZbmnr3zwkCPYOhvYCAwS2aDAImNHDJmyYW23ujodMPnU+4KLupiT19EDNgWl0Zu1wh0Vmb0t6aLKGpCfMSA+n6tY+kHX6gdG8CW5K1h/c4OD4szkWDWtAi6z2NXYvwyT0w+6UBDEK1t8ucMhhsYKhSz8CkrS2DfA4="
+      # Commit when running from daily branch
+      - DAILY_COMMIT=master
 
 language: python
-# Default Python version is usually 2.7
+# Default Python version
 python: 3.5
 sudo: required
 dist: trusty
@@ -23,22 +25,6 @@ matrix:
       # Exclude the default Python 3.5 build
       - python: 3.5
   include:
-    #- os: linux
-    #  env:
-    #    - MB_PYTHON_VERSION=2.7
-    #- os: linux
-    #  env:
-    #    - MB_PYTHON_VERSION=2.7
-    #    - UNICODE_WIDTH=16
-    #- os: linux
-    #  env:
-    #    - MB_PYTHON_VERSION=2.7
-    #    - PLAT=i686
-    #- os: linux
-    #  env:
-    #    - MB_PYTHON_VERSION=2.7
-    #    - PLAT=i686
-    #    - UNICODE_WIDTH=16
     - os: linux
       env:
         - MB_PYTHON_VERSION=3.5
@@ -103,6 +89,14 @@ matrix:
         - NP_TEST_DEP=numpy==1.17.3
 
 before_install:
+    - echo "Building cftime-$BUILD_COMMIT"
+    - if [ "$TRAVIS_BRANCH" == "daily" ]; then
+          CONTAINER="pre-release";
+          BUILD_COMMIT=${DAILY_COMMIT:-$BUILD_COMMIT};
+      else
+          CONTAINER=wheels;
+          UPLOAD_ARGS="--no-update-index";
+      fi
     - BUILD_DEPENDS="$NP_BUILD_DEP Cython"
     - TEST_DEPENDS="$NP_TEST_DEP pytest pytest-cov"
     - source multibuild/common_utils.sh
@@ -113,6 +107,10 @@ install:
     # Maybe get and clean and patch source
     - clean_code $REPO_DIR $BUILD_COMMIT
     - build_wheel $REPO_DIR $PLAT
+    # Add Travis build number to wheel name for daily builds
+    - if [ "$TRAVIS_BRANCH" == "daily" ]; then
+      python add_build_no.py -r -s + $TRAVIS_BUILD_NUMBER $WHEEL_SDIR/*.whl ;
+      fi
 
 script:
     - install_run $PLAT
