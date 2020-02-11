@@ -34,8 +34,8 @@ environment:
     - PYTHON: C:\Python36-x64
     - PYTHON: C:\Python35
     - PYTHON: C:\Python35-x64
-    - PYTHON: C:\Python27
-    - PYTHON: C:\Python27-x64
+    #- PYTHON: C:\Python27
+    #- PYTHON: C:\Python27-x64
 
 install:
   - cmd: echo "Filesystem root:"
@@ -72,6 +72,7 @@ install:
   - git submodule update --init
   # Dependencies for package
   - pip install Cython
+  - pip install numpy
 
 build_script:
   # Build and install the wheel
