@@ -18,6 +18,12 @@ environment:
           secure: H46gyfPdKSfXRfADNnvwJRfqX9vyHoeM16shc19GdWQLMHLl8CADY60SBnNm4fjE
 
     matrix:
+    - PYTHON: C:\Python39
+      NP_BUILD_DEP: "1.19.4"
+      NP_TEST_DEP: "1.19.4"
+    - PYTHON: C:\Python39-x64
+      NP_BUILD_DEP: "1.19.4"
+      NP_TEST_DEP: "1.19.4"
     - PYTHON: C:\Python38
       NP_BUILD_DEP: "1.17.3"
       NP_TEST_DEP: "1.17.3"
