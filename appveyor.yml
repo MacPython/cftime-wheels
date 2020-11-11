@@ -116,11 +116,15 @@ after_test:
 #  - python -m wheelhouse_uploader upload
 #    --local-folder=dist --no-update-index
 #    wheels
+ 
 # upload to github
+artifacts:
+  - path: /.*\.whl/
 deploy:
-  provider: GitHub
-  auth_token:
-    secure: hjJNKldisMmyQSiKXHMbEsXgYVr9lNDI3es4qvhYskBq+BDXcCpjL4oDwT3KXykn
-  artifact: /.*\.whl/ 
-  on:
-    APPVEYOR_REPO_TAG: true 
+  - provider: GitHub
+    description: "cftime release"
+    auth_token: 
+      secure: hjJNKldisMmyQSiKXHMbEsXgYVr9lNDI3es4qvhYskBq+BDXcCpjL4oDwT3KXykn
+    force_update: true
+    on:
+      APPVEYOR_REPO_TAG: true 
