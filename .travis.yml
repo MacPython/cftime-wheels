@@ -1,15 +1,14 @@
 env:
   global:
+      env:
       - REPO_DIR="cftime"
       - BUILD_COMMIT=v1.2.1rel
       - PLAT=x86_64
       - UNICODE_WIDTH=32
       - NP_BUILD_DEP="numpy==1.17.3"
       - NP_TEST_DEP="numpy==1.17.3"
-      - WHEELHOUSE_UPLOADER_USERNAME=travis-worker
-      # Following generated with
-      # travis encrypt -r MacPython/cftime-wheels WHEELHOUSE_UPLOADER_SECRET=<the API key>
-      - secure: "jBM5bVlciv3VGGBhhilljF5UlPVlsSDdody9CSSM7FMbX14EKzLFnGwQCsRRHUtGKVTjveT+u6I4Vq6ieEc6D21EUSU99mmN7Z0FnD6D0FMdmPsH8Eb8m6YvMlF7ypYqDS05awCiiU4QiYix4jv0I0oPaVTRz+1jW/1niZNlIb9pwyJwv7YuiIfpSuG084gkTNjkWhjE2jTJD0KyJ0n+PL3DT+a6AFsU7Y84RhgR/Nc/fPu1mcxcn4zJCdzP6isuQz+1AgrPKxnCqyphynFe9pRx7tp7v7+lNzkMozI5EVaYrGrVEfMIeuhFiCBhMjPpzlxxE4Gn/dCcz1xi8dkLUSYbq0Enf78lcbMurky5zP45sfFOtWBMUuj4WNhjL2C3S5bfgmJ7/OG9zJOLRbLZm8L4pMMNkUxsXsuq5wacgk9n3tajv1MVqdOhg101YrUsqP7LCAsDSSTQOI3c8m2CKLtKeg1kv26ONUnfTODrc53ABtfFr4kuDtrD/lRkRxC+IfgFPzGkkuZbmnr3zwkCPYOhvYCAwS2aDAImNHDJmyYW23ujodMPnU+4KLupiT19EDNgWl0Zu1wh0Vmb0t6aLKGpCfMSA+n6tY+kHX6gdG8CW5K1h/c4OD4szkWDWtAi6z2NXYvwyT0w+6UBDEK1t8ucMhhsYKhSz8CkrS2DfA4="
+      # travis encrypt -r MacPython/cftime-wheels --org GITHUB_API_TOKEN="<github personal token>"
+      - secure: "DpgZ/hgcbMWXPjoVsvfyYOUIbOcqPFrvbSd2BvnrGYg2T26tR+vV3AqHrGIYnUPlxtDy1zqskdu0f4gt4/h9JJMQbIDQn0yBZs2ok6zt0zZIjaEEMPmd5hkhVE6b8ENRNHoEmsHJKAjv1/2whnygQTvnarmknMpv4oY4Z3fTYyWRBedddbDBdmxNO3YBqSQPxCCkwSH2cjggktKBQPUOKEK6PjA31iTmyjpX5N+OWCLW7kn2PWJgqtfHcXRqKO4HP7ClmGGTNHIVsKW2sR3Zo5c+3PlRuPwaL9RBEfR0j12tvh1O+Rm/tycJ4i3E1gj1zvLL3+M23Mr1lHzXfPth6wXXB2acNvalEOI/pHev/Kejl31yw3/piGqYUJImGYALWVzTD8exP/Rbr1N113p+kP9BP4Ol4MN7O5auzooZ/iWYLvZwD1W4SmVRNrQT5JFLxRP2k9fTmwMiQJY64Yy0QI7aKaCfRjRY006rRSlpEo1GPNQBG+5PjtBodm9e7UQyfu7aRy5TA0LqsWahXj7JVhQ7HxhBlWz2t+cJnLHeTgRWjqws184jnNrwQ+v8vmV1vU4EWxr59Xn4j0Oi1n03K3KEp68SaQqq2zQ8JNrhktn412juUunKNEEsLjLKnkr5rR324e1CRQFWRd9FnbVOwyHar8XJL3ZTQKWnJ2sd0LU="
 
 language: python
 # Default Python version
@@ -107,18 +106,10 @@ install:
 script:
     - install_run $PLAT
 
-#after_success:
-#    # Upload wheels to Rackspace container
-#    - pip install wheelhouse-uploader
-#    - python -m wheelhouse_uploader upload --local-folder
-#          ${TRAVIS_BUILD_DIR}/wheelhouse/
-#          --no-update-index
-#          wheels
 # upload to github
 deploy:
   provider: releases
-  api_key:
-    secure: KGyathxxkUUwJtxzou8mXCBKoja4cUukCMRgJoLdR9aLChDhA1Th0cbL5jWt2gv/Za1M8adJDzBsELUmuYee7QB3oWMgJ765RsF/Cmri4kLt8MLMNrZov3qOCRprXxR2Qq5S07RiGshhdeFVulywTkQDT8E4ERPW9HlJE6gEZ9LD0/qDeKejdXF783I8dXnbJkZMOljKCwHFHuijHatlPLNkiFhalIL+zTd+ZseztX3B6iHuIFY1giZexpOecpbjhQ6acR0TaV/v2W2fYT57esDGuBVFI+qHe3NAD7XueP7aAjVmiAEreoxQAcSCTfz3X0JFfNLIT3iyVtpzm3WTEif9RvXn4H/qVwnA9/P6TReCBqKeCSozzpHcQ8wlM+Asiq3wBo9lavxIU57TDVYfJlS9jzb+wl4cSzLOvZkJcLj9Criy63dfCwRwCBnPWX63oDnvYs038L+NjVtI101idUyiKRJ5J1JtSALh6EcsPbMBwzWH/Ka6Pa2UuKCJ88A5Rk7je4zFSL8csGLxZkeCQcgfIKMLXqh7QcMfZQz/i0crbaswqw+WpZQbS6ekXLsoVNFMdJ3dzyq6i3XNBJkIv2rzfcb7LxVPJFASZx2mDv5PsXoBOsxRlF75pipFZgy6Suaaki6dSq3vLQagztDKrPeeIEXaV9auoSccCYD4W4A=
+  api_key: $GITHUB_API_TOKEN
   file_glob: true
   file: "${TRAVIS_BUILD_DIR}/wheelhouse/*.whl"
   skip_cleanup: true
