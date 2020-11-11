@@ -123,5 +123,4 @@ deploy:
     secure: RO/s+OINpPVbAjgiIsXBa0wVOJSv142TIOEsPJ6nAIxsfvKiqRm7+2B1BENVFyu3m5hwg8WUDQauhe1emP2LDhGKrPw+yBwMc5bGalEYVeSVBI/by57VSyKGSNilOBkkzjtLJSts2HauHDkQaaQPU3UsIP+fQpppfYLvShHbp9A=
   artifact: /.*\.whl/ 
   on:
-    branch: master
     APPVEYOR_REPO_TAG: true 
