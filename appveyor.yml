@@ -108,11 +108,22 @@ after_test:
   # If tests are successful, create binary packages for the project.
   - dir dist
 
-on_success:
-  # Upload the generated wheel package to Rackspace
-  # On Windows, Apache Libcloud cannot find a standard CA cert bundle so we
-  # disable the ssl checks.
-  - pip install wheelhouse-uploader
-  - python -m wheelhouse_uploader upload
-    --local-folder=dist --no-update-index
-    wheels
+#on_success:
+#  # Upload the generated wheel package to Rackspace
+#  # On Windows, Apache Libcloud cannot find a standard CA cert bundle so we
+#  # disable the ssl checks.
+#  - pip install wheelhouse-uploader
+#  - python -m wheelhouse_uploader upload
+#    --local-folder=dist --no-update-index
+#    wheels
+# upload to github
+deploy:
+  provider: releases
+  api_key:
+    secure: RO/s+OINpPVbAjgiIsXBa0wVOJSv142TIOEsPJ6nAIxsfvKiqRm7+2B1BENVFyu3m5hwg8WUDQauhe1emP2LDhGKrPw+yBwMc5bGalEYVeSVBI/by57VSyKGSNilOBkkzjtLJSts2HauHDkQaaQPU3UsIP+fQpppfYLvShHbp9A=
+  file_glob: true
+  file: "${TRAVIS_BUILD_DIR}/wheelhouse/*.whl"
+  skip_cleanup: true
+  on:
+    repo: MacPython/cftime-wheels
+    tags: true
