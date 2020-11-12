@@ -1,0 +1,24 @@
+* generate personal access token for github (https://github.com/settings/tokens/new)
+* for .travis.yml, encrypt it using "travis encrypt", e.g.
+   travis encrypt -r MacPython/cftime-wheels --org GITHUB_API_TOKEN="<github personal token>"
+   env:
+      - secure: <generated string>
+   deploy:
+     provider: releases
+     api_key: $GITHUB_API_TOKEN
+* for appveyor.yml, copy and paste it into https://ci.appveyor.com/tools/encrypt
+   artifacts:
+     - path: /.*\.whl/
+   deploy:
+     - provider: GitHub
+       description: "cftime release"
+       auth_token: 
+         secure: <generated string>
+       force_update: true
+       on:
+         APPVEYOR_REPO_TAG: true 
+* to delete and re-create a tag (to trigger re-uploading new wheels)
+   git tag -d vX.Y.Zrel
+   git push --delete origin vX.Y.Zrel
+   git tag -a vX.Y.Zrel -m "version X.Y.Z release"
+   git push origin --tags
