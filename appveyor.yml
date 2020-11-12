@@ -11,7 +11,7 @@ os: Visual Studio 2015
 environment:
     global:
       # Remember to edit .travis.yml too
-      BUILD_COMMIT: v1.2.1rel
+      BUILD_COMMIT: v1.3.0rel
       WHEELHOUSE_UPLOADER_USERNAME: travis-worker
       # Encrypted to matthew.brett+unidata account.
       WHEELHOUSE_UPLOADER_SECRET:
@@ -123,7 +123,7 @@ artifacts:
 deploy:
   - provider: GitHub
     description: "cftime release"
-    auth_token: 
+    auth_token:
       secure: hjJNKldisMmyQSiKXHMbEsXgYVr9lNDI3es4qvhYskBq+BDXcCpjL4oDwT3KXykn
     force_update: true
     on:
