@@ -119,6 +119,9 @@ jobs:
         build_wheel $REPO_DIR $PLAT
         echo "------- INSTALL_RUN --------"
         install_run $PLAT
+        if [ $MB_ML_VER -ne 1 ]; then
+           /bin/rm -f  wheelhouse/cftime*manylinux1*whl
+        fi
         echo "MB_ML_VER = $MB_ML_VER"
         ls -l wheelhouse/cftime*whl
     - name: Upload wheels to release
@@ -126,7 +129,7 @@ jobs:
       if: github.event_name == 'create'
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: "${{ github.workspace }}/wheelhouse/cftime*${MB_ML_VER}*whl"
+        file: ${{ github.workspace }}/wheelhouse/cftime*whl
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
