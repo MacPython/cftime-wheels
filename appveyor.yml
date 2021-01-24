@@ -119,7 +119,7 @@ after_test:
  
 # upload to github
 artifacts:
-  - path: /.*\.whl/
+  - path: wheel\\dist\\\*.whl
 deploy:
   - provider: GitHub
     description: "cftime release"
