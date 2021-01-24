@@ -94,7 +94,9 @@ build_script:
       }
   - cd dist
   - pip install --pre --no-index -f . cftime
+  - mv *whl ..
   - cd ..
+  - ls -l *whl
 
 test_script:
   # Run some tests
@@ -119,7 +121,7 @@ after_test:
  
 # upload to github
 artifacts:
-  - path: dist\*.whl
+  - path: cftime*.whl
 deploy:
   - provider: GitHub
     description: "cftime release"
