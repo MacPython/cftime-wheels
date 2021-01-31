@@ -123,8 +123,9 @@ artifacts:
 deploy:
   - provider: GitHub
     description: "cftime release"
+    tag: v1.4.0rel
     auth_token:
       secure: hjJNKldisMmyQSiKXHMbEsXgYVr9lNDI3es4qvhYskBq+BDXcCpjL4oDwT3KXykn
-    #force_update: true
+    force_update: true
     #on:
     #  APPVEYOR_REPO_TAG: true 
