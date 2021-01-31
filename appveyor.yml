@@ -125,6 +125,6 @@ deploy:
     description: "cftime release"
     auth_token:
       secure: hjJNKldisMmyQSiKXHMbEsXgYVr9lNDI3es4qvhYskBq+BDXcCpjL4oDwT3KXykn
-    force_update: true
-    on:
-      APPVEYOR_REPO_TAG: true 
+    #force_update: true
+    #on:
+    #  APPVEYOR_REPO_TAG: true 
