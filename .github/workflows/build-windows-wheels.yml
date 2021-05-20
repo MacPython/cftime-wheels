@@ -16,7 +16,7 @@ on:
 jobs:
   build:
 
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     defaults:
       run:
         shell: bash
@@ -25,7 +25,6 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.6", "3.7", "3.8", "3.9"]
-        os: windows-latest
         platform: [x64, x32]
     env:
       REPO_DIR: cftime
