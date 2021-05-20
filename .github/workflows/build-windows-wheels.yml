@@ -126,7 +126,7 @@ jobs:
       if: github.event_name == 'create'
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ./${REPO_DIR}/dist/*.whl
+        file: ${{ github.workspace }}/cftime/dist/cftime*whl
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
