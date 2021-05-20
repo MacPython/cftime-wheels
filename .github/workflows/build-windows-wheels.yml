@@ -95,8 +95,8 @@ jobs:
         pip install ${NP_BUILD_DEP} cython
         echo "------- Checkout BUILD_COMMIT --------"
         /bin/rm -rf cftime
-        cd cftime
         git clone https://github.com/Unidata/cftime
+        cd cftime
         git checkout ${BUILD_COMMIT}
         cd ..
 
