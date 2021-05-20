@@ -105,6 +105,7 @@ jobs:
         cd ${REPO_DIR}
         python setup.py bdist_wheel
         cd ..
+        find ./ -name "*whl" -print
 
     - name: Install Tests Dependencies
       run: |
@@ -124,7 +125,7 @@ jobs:
       if: github.event_name == 'create'
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ${{ github.workspace }}/${REPO_DIR}/dist/*.whl
+        file: ./${REPO_DIR}/dist/*.whl
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
