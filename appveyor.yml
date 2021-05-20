@@ -119,5 +119,6 @@ deploy:
     auth_token:
       secure: hjJNKldisMmyQSiKXHMbEsXgYVr9lNDI3es4qvhYskBq+BDXcCpjL4oDwT3KXykn
     force_update: true
+    appveyor_repo_tag: true
     on:
       APPVEYOR_REPO_TAG: true 
