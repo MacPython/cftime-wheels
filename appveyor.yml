@@ -108,21 +108,13 @@ after_test:
   # If tests are successful, create binary packages for the project.
   - dir dist
 
-#on_success:
-#  # Upload the generated wheel package to Rackspace
-#  # On Windows, Apache Libcloud cannot find a standard CA cert bundle so we
-#  # disable the ssl checks.
-#  - pip install wheelhouse-uploader
-#  - python -m wheelhouse_uploader upload
-#    --local-folder=dist --no-update-index
-#    wheels
- 
 # upload to github
 artifacts:
   - path: cftime\dist\*.whl
 deploy:
   - provider: GitHub
     description: "cftime release"
+    release: v1.5.0rel2
     tag: v1.5.0rel2
     auth_token:
       secure: hjJNKldisMmyQSiKXHMbEsXgYVr9lNDI3es4qvhYskBq+BDXcCpjL4oDwT3KXykn
