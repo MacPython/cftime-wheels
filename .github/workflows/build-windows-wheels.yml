@@ -94,6 +94,7 @@ jobs:
         pip install wheel==0.26
         pip install ${NP_BUILD_DEP} cython
         echo "------- Checkout BUILD_COMMIT --------"
+        git clone https://github.com/Unidata/cftime
         cd ${REPO_DIR}
         git checkout ${BUILD_COMMIT}
         cd ..
