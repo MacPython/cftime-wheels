@@ -10,6 +10,7 @@ os: Visual Studio 2015
 
 environment:
     global:
+      APPVEYOR_REPO_TAG: true
       # Remember to edit .travis.yml too
       BUILD_COMMIT: v1.5.0rel2
       WHEELHOUSE_UPLOADER_USERNAME: travis-worker
@@ -119,6 +120,5 @@ deploy:
     auth_token:
       secure: hjJNKldisMmyQSiKXHMbEsXgYVr9lNDI3es4qvhYskBq+BDXcCpjL4oDwT3KXykn
     force_update: true
-    appveyor_repo_tag: true
     on:
       APPVEYOR_REPO_TAG: true 
