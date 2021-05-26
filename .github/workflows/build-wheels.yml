@@ -26,17 +26,15 @@ jobs:
       matrix:
         python-version: ["3.6", "3.7", "3.8", "3.9"]
         os: [ubuntu-latest, macos-latest]
-        platform: [x64, x32, aarch64]
+        platform: [x64, x32]
         MB_ML_VER: [1,2014]
         exclude:
           - os: macos-latest  
             platform: x32
-          - os: macos-latest  
-            platform: aarch64
     env:
       REPO_DIR: cftime
       PKG_NAME: cftime
-      BUILD_COMMIT: v1.5.0rel2
+      BUILD_COMMIT: v1.5.0rel
       UNICODE_WIDTH: 32
       MB_PYTHON_VERSION: ${{ matrix.python-version }}
       TRAVIS_PYTHON_VERSION: ${{ matrix.python-version }}
