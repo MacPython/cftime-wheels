@@ -59,8 +59,15 @@ jobs:
           pip install readme-renderer && \
           twine check dist/* && \
           mkdir -p ${{ github.workspace }}/wheelhouse && \
+          pwd && \
+          ls -l dist && \
           /bin/mv -f dist/*whl ${{ github.workspace }}/wheelhouse && \
           conda deactivate'
+
+    - name: Check Wheel
+      run: |
+        ls -l /ws
+        ls -l ${{ github.workspace }}/wheelhouse
 
     - name: Upload wheels to release
       uses: svenstaro/upload-release-action@v2
