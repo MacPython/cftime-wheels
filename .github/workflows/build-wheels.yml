@@ -59,22 +59,20 @@ jobs:
           pip install readme-renderer && \
           twine check dist/* && \
           mkdir -p ${{ github.workspace }}/wheelhouse && \
-          pwd && \
           ls -l dist && \
-          /bin/mv -f dist/*whl ${{ github.workspace }}/wheelhouse && \
+          docker cp dist/*whl ${{ github.workspace }} && \
           conda deactivate'
 
     - name: Check Wheel
       run: |
-        ls -l /ws
-        ls -l ${{ github.workspace }}/wheelhouse
+        ls -l ${{ github.workspace }}
 
     - name: Upload wheels to release
       uses: svenstaro/upload-release-action@v2
       if: github.event_name == 'create'
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ${{ github.workspace }}/wheelhouse/cftime*whl
+        file: ${{ github.workspace }}/cftime*whl
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
