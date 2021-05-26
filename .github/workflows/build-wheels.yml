@@ -58,10 +58,17 @@ jobs:
           check-manifest --verbose && \
           pip install readme-renderer && \
           twine check dist/* && \
-          pwd && \
-          mkdir -p ${{ github.workspace }}/wheelhouse && \
-          mv dist/*whl ${{ github.workspace }}/wheelhouse && \
-          deactivate'
+          conda deactivate'
+
+    - name: Upload wheels to release
+      uses: svenstaro/upload-release-action@v2
+      if: github.event_name == 'create'
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: /ws/cftime/dist/cftime*whl
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
 
   build_macos_linux:
 
