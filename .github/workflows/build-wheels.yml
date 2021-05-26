@@ -59,7 +59,8 @@ jobs:
           pip install readme-renderer && \
           twine check dist/* && \
           pwd && \
-          find ./ -name "*whl" -print && \
+          mkdir -p ${{ github.workspace }}/wheelhouse && \
+          mv dist/*whl ${{ github.workspace }}/wheelhouse && \
           deactivate'
 
   build_macos_linux:
