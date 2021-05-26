@@ -60,7 +60,9 @@ jobs:
           twine check dist/* && \
           mkdir -p ${{ github.workspace }}/wheelhouse && \
           ls -l dist && \
-          docker cp dist/*whl ${{ github.workspace }} && \
+          CONTAINER_ID=$(docker ps -alq) && \
+          FILE=$(docker exec $CONTAINER_ID sh -c "ls dist/*whl") && \
+          docker cp $CONTAINER_ID:dist/$FILE ${{ github.workspace }} && \
           conda deactivate'
 
     - name: Check Wheel
