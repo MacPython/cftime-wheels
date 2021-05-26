@@ -30,7 +30,9 @@ jobs:
         MB_ML_VER: [1,2014]
         exclude:
           - os: macos-latest  
-            platform: [x32, aarch64]
+            platform: x32
+          - os: macos-latest  
+            platform: aarch64
     env:
       REPO_DIR: cftime
       PKG_NAME: cftime
