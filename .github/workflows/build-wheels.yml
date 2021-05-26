@@ -58,6 +58,8 @@ jobs:
           check-manifest --verbose && \
           pip install readme-renderer && \
           twine check dist/* && \
+          mkdir -p ${{ github.workspace }}/wheelhouse && \
+          /bin/mv -f dist/*whl ${{ github.workspace }}/wheelhouse && \
           conda deactivate'
 
     - name: Upload wheels to release
@@ -65,7 +67,7 @@ jobs:
       if: github.event_name == 'create'
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: /ws/cftime/dist/cftime*whl
+        file: ${{ github.workspace }}/wheelhouse/cftime*whl
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
