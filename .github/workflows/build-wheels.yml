@@ -27,6 +27,7 @@ jobs:
       py: /opt/python/${{ matrix.pyver }}/bin/python
       img: quay.io/pypa/manylinux2014_aarch64
       python-version: ${{ matrix.pyver }}
+      BUILD_COMMIT: v1.5.0rel
     steps:
     - uses: actions/checkout@v2
     - name: Set up QEMU
@@ -43,6 +44,9 @@ jobs:
           chmod +x miniconda.sh && ./miniconda.sh -b -p $MINICONDA_PATH && \
           export PATH=$MINICONDA_PATH/bin:$PATH && \
           export Python=${{ env.python-version }} && \
+          git clone https://github.com/Unidata/cftime && \
+          git checkout $BUILD_COMMIT
+          cd cftime
           conda create --name TEST python=${Python:2:1}.${Python:3:1} --file requirements.txt --file requirements-dev.txt && \
           source activate TEST && \
           pip install -v -e  . --no-deps --force-reinstall && \
