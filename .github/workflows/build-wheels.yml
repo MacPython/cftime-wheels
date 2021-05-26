@@ -15,9 +15,6 @@ on:
 
 jobs:
 
-  env:
-    BUILD_COMMIT: v1.5.0rel
-
   build_aarch64:
 
     name: "build (${{ matrix.pyver }}, aarch64)"
@@ -30,6 +27,7 @@ jobs:
       py: /opt/python/${{ matrix.pyver }}/bin/python
       img: quay.io/pypa/manylinux2014_aarch64
       python-version: ${{ matrix.pyver }}
+      BUILD_COMMIT: v1.5.0rel
     steps:
     - uses: actions/checkout@v2
     - name: Set up QEMU
@@ -82,6 +80,7 @@ jobs:
           - os: macos-latest  
             platform: x32
     env:
+      BUILD_COMMIT: v1.5.0rel
       REPO_DIR: cftime
       PKG_NAME: cftime
       UNICODE_WIDTH: 32
