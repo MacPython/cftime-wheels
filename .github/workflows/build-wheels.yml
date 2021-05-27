@@ -27,6 +27,7 @@ jobs:
       py: /opt/python/${{ matrix.pyver }}/bin/python
       img: quay.io/pypa/manylinux2014_aarch64
       python-version: ${{ matrix.pyver }}
+      CFTIME_VERSION: 1.5.0
       BUILD_COMMIT: v1.5.0rel
     steps:
     - uses: actions/checkout@v2
@@ -35,7 +36,6 @@ jobs:
       uses: docker/setup-qemu-action@v1
     - name: Build and Test
       run: |
-        pwd
         docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
           ${{ env.img }} \
           bash -exc 'yum install -y wget docker && \
@@ -51,21 +51,14 @@ jobs:
           conda create --name TEST python=${Python:2:1}.${Python:3:1} --file requirements.txt --file requirements-dev.txt && \
           source activate TEST && \
           pip install -v -e  . --no-deps --force-reinstall && \
-          conda info --all && \
-          conda list && \
-          py.test -vv test && \
-          python setup.py --version && \
           pip wheel . -w dist --no-deps && \
-          check-manifest --verbose && \
-          pip install readme-renderer && \
-          twine check dist/* && \
-          mkdir -p ${{ github.workspace }}/wheelhouse && \
           ls -l dist && \
-          CONTAINER_ID=$(docker ps -alq) && \
-          FILE=$(basename dist/*whl) && \
-          docker cp $CONTAINER_ID:/ws/cftime/dist/$FILE ${{ github.workspace }} && \
           conda deactivate'
+        CONTAINER_ID=$(docker ps -alq)
+        FILE=cftime-${CFTIME_VERSION}-${{ matrix.pyver }}-linux_aarch64.whl
+        docker cp $CONTAINER_ID:/ws/cftime/dist/$FILE ${{ github.workspace }} 
         ls -l ${{ github.workspace }}
+        
 
     - name: Upload wheels to release
       uses: svenstaro/upload-release-action@v2
