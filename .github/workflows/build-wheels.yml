@@ -15,61 +15,6 @@ on:
 
 jobs:
 
-  build_aarch64:
-
-    name: "build (${{ matrix.pyver }}, aarch64)"
-    strategy:
-      matrix:
-        pyver: [cp37-cp37m, cp38-cp38, cp39-cp39]
-      fail-fast: false
-    runs-on: ubuntu-latest
-    env:
-      py: /opt/python/${{ matrix.pyver }}/bin/python
-      img: quay.io/pypa/manylinux2014_aarch64
-      python-version: ${{ matrix.pyver }}
-      CFTIME_VERSION: 1.5.0
-      BUILD_COMMIT: v1.5.0rel
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up QEMU
-      id: qemu
-      uses: docker/setup-qemu-action@v1
-    - name: Build and Test
-      run: |
-        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-          ${{ env.img }} \
-          bash -exc 'yum install -y wget docker && \
-          echo "Set Up Conda Env" && \
-          wget https://github.com/conda-forge/miniforge/releases/download/4.8.2-1/Miniforge3-4.8.2-1-Linux-aarch64.sh -O miniconda.sh && \
-          export MINICONDA_PATH=/root/miniconda && \
-          chmod +x miniconda.sh && ./miniconda.sh -b -p $MINICONDA_PATH && \
-          export PATH=$MINICONDA_PATH/bin:$PATH && \
-          export Python=${{ env.python-version }} && \
-          git clone https://github.com/Unidata/cftime && \
-          git checkout $BUILD_COMMIT && \
-          cd cftime && \
-          conda create --name TEST python=${Python:2:1}.${Python:3:1} --file requirements.txt --file requirements-dev.txt && \
-          source activate TEST && \
-          pip install -v -e  . --no-deps --force-reinstall && \
-          pip wheel . -w dist --no-deps && \
-          ls -l dist && \
-          conda deactivate'
-        CONTAINER_ID=$(docker ps -alq)
-        FILE=cftime-${CFTIME_VERSION}-${{ matrix.pyver }}-linux_aarch64.whl
-        docker cp $CONTAINER_ID:/ws/cftime/dist/$FILE ${{ github.workspace }} 
-        ls -l ${{ github.workspace }}
-        
-
-    - name: Upload wheels to release
-      uses: svenstaro/upload-release-action@v2
-      if: github.event_name == 'create'
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ${{ github.workspace }}/cftime*whl
-        tag: ${{ github.ref }}
-        overwrite: true
-        file_glob: true
-
   build_macos_linux:
 
     runs-on: ${{ matrix.os }}
@@ -82,13 +27,18 @@ jobs:
       matrix:
         python-version: ["3.6", "3.7", "3.8", "3.9"]
         os: [ubuntu-latest, macos-latest]
-        platform: [x64, x32]
+        platform: [x64, x32, aarch64]
         MB_ML_VER: [1,2014]
         exclude:
           - os: macos-latest  
             platform: x32
+          - os: ubuntu-latest
+            platform: aarch64
+            MB_ML_VER: 1
+          - os: macos-latest
+            platform: aarch64
     env:
-      BUILD_COMMIT: v1.5.0rel
+      BUILD_COMMIT: v1.5.0rel2
       REPO_DIR: cftime
       PKG_NAME: cftime
       UNICODE_WIDTH: 32
@@ -109,6 +59,9 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - uses: docker/setup-qemu-action@v1
+      if: ${{ matrix.platform == 'aarch64' }}
+      name: Set up QEMU
     - name: Pin Numpy version
       run: |
         if [ "$MB_PYTHON_VERSION" == '3.6' ]; then
@@ -129,7 +82,7 @@ jobs:
     - name: Setup Environment variables
       run: |
         if [ "schedule" == "${{ github.event_name }}" ] || [ "master" == "$BUILD_COMMIT" ]; then echo "TOKEN=$SCIPY_WHEELS_NIGHTLY_ACCESS" >> $GITHUB_ENV; else echo "TOKEN=$MULTIBUILD_WHEELS_STAGING_ACCESS" >> $GITHUB_ENV; fi
-        if [ "x32" == "${{ matrix.platform }}" ]; then echo "PLAT=i686" >> $GITHUB_ENV; else echo "PLAT=x86_64" >> $GITHUB_ENV; fi
+        if [ "x32" == "${{ matrix.platform }}" ]; then echo "PLAT=i686" >> $GITHUB_ENV; elif [ "aarch64" == "${{ matrix.platform }}" ]; then echo "PLAT=aarch64" >> $GITHUB_ENV; else echo "PLAT=x86_64" >> $GITHUB_ENV; fi
         if [ "macos-latest" == "${{ matrix.os }}" ]; then echo "TRAVIS_OS_NAME=osx" >> $GITHUB_ENV; else echo "TRAVIS_OS_NAME=${{ matrix.os }}" >> $GITHUB_ENV; fi
         if [ "schedule" == "${{ github.event_name }}" ]; then echo "TRAVIS_EVENT_TYPE=cron" >> $GITHUB_ENV; else echo "TRAVIS_EVENT_TYPE=${{ github.event_name }}" >> $GITHUB_ENV; fi
         if [ "schedule" == "${{ github.event_name }}" ]; then echo "BUILD_COMMIT=master" >> $GITHUB_ENV; else echo "BUILD_COMMIT=$BUILD_COMMIT" >> $GITHUB_ENV; fi
@@ -137,6 +90,10 @@ jobs:
       if: startsWith(matrix.os,'ubuntu') && matrix.MB_ML_VER == 2010
       run: |
         echo "DOCKER_TEST_IMAGE=$(echo multibuild/xenial_$PLAT)" >> $GITHUB_ENV
+    - name: Setup Special Environment variables for aarch64
+      if: startsWith(matrix.platform,'aarch64') && matrix.MB_ML_VER == 2014
+      run: |
+        echo "DOCKER_TEST_IMAGE=$(echo multibuild/xenial_arm64v8)" >> $GITHUB_ENV
     - name: Print some Environment variable
       run: |
         echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
