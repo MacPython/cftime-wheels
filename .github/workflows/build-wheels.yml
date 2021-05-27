@@ -62,7 +62,7 @@ jobs:
           ls -l dist && \
           CONTAINER_ID=$(docker ps -alq) && \
           FILE=$(basename dist/*whl) && \
-          docker cp $CONTAINER_ID:dist/$FILE ${{ github.workspace }} && \
+          docker cp $CONTAINER_ID:/ws/cftime/dist/$FILE ${{ github.workspace }} && \
           conda deactivate'
 
     - name: Check Wheel
