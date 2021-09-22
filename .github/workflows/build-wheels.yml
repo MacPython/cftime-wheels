@@ -38,7 +38,7 @@ jobs:
           - os: macos-latest
             platform: aarch64
     env:
-      BUILD_COMMIT: v1.5.0rel2
+      BUILD_COMMIT: v1.5.1rel
       REPO_DIR: cftime
       PKG_NAME: cftime
       UNICODE_WIDTH: 32
