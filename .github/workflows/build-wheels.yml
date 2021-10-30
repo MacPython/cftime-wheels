@@ -87,8 +87,8 @@ jobs:
         pip install virtualenv
     - name: Build and Install Wheels
       run: |
-        BUILD_DEPENDS="oldest-supported-numpy cython"
-        TEST_DEPENDS="oldest-supported-numpy pytest pytest-cov"
+        BUILD_DEPENDS="cython oldest-supported-numpy"
+        TEST_DEPENDS="pytest pytest-cov oldest-supported-numpy"
         source multibuild/common_utils.sh
         source multibuild/travis_steps.sh
         echo "------- BEFORE INSTALL --------"
