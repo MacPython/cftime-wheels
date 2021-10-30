@@ -14,7 +14,6 @@ on:
 #    - cron: '0 0 * * 0,3' # 2/weekly
 
 jobs:
-
   build_macos_linux:
 
     runs-on: ${{ matrix.os }}
@@ -22,7 +21,6 @@ jobs:
       run:
         shell: bash
     strategy:
-
       fail-fast: false
       matrix:
         python-version: [ "3.6", "3.7", "3.8", "3.9", "3.10" ]
@@ -63,20 +61,15 @@ jobs:
     - name: Pin Numpy version
       run: |
         if [ "$MB_PYTHON_VERSION" == '3.6' ]; then
-          echo "NP_BUILD_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
-          echo "NP_TEST_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
+          echo "NP_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
         elif [ "$MB_PYTHON_VERSION" == '3.7' ]; then
-          echo "NP_BUILD_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
-          echo "NP_TEST_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
+          echo "NP_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
         elif [ "$MB_PYTHON_VERSION" == '3.8' ]; then
-          echo "NP_BUILD_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
-          echo "NP_TEST_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
+          echo "NP_DEP=$(echo oldest-supported-numpy)" >> $GITHUB_ENV;
         elif [ "$MB_PYTHON_VERSION" == '3.9' ]; then
-          echo "NP_BUILD_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
-          echo "NP_TEST_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
+          echo "NP_DEP=$(echo oldest-supported-numpy)" >> $GITHUB_ENV;
         elif [ "$MB_PYTHON_VERSION" == '3.10' ]; then
-          echo "NP_BUILD_DEP=$(echo numpy==1.21.3)" >> $GITHUB_ENV;
-          echo "NP_TEST_DEP=$(echo numpy==1.21.3)" >> $GITHUB_ENV;
+          echo "NP_DEP=$(echo oldest-supported-numpy)" >> $GITHUB_ENV;
         else
           echo "None of the defined python version, use default"
         fi
@@ -93,13 +86,13 @@ jobs:
         echo "DOCKER_TEST_IMAGE=$(echo multibuild/xenial_arm64v8)" >> $GITHUB_ENV
     - name: Print some Environment variable
       run: |
-        echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
-        echo "TRAVIS_PULL_REQUEST: ${TRAVIS_PULL_REQUEST}"
-        echo "TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG}"
-        echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
-        echo "TRAVIS_OS_NAME: ${TRAVIS_OS_NAME}"
-        echo "PLAT: ${PLAT}"
-        echo "DOCKER_TEST_IMAGE: ${DOCKER_TEST_IMAGE}"
+       echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
+       echo "TRAVIS_PULL_REQUEST: ${TRAVIS_PULL_REQUEST}"
+       echo "TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG}"
+       echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
+       echo "TRAVIS_OS_NAME: ${TRAVIS_OS_NAME}"
+       echo "PLAT: ${PLAT}"
+       echo "DOCKER_TEST_IMAGE: ${DOCKER_TEST_IMAGE}"
 
     - name: Install VirtualEnv
       run: |
@@ -107,8 +100,8 @@ jobs:
         pip install virtualenv
     - name: Build and Install Wheels
       run: |
-        BUILD_DEPENDS="$NP_BUILD_DEP cython"
-        TEST_DEPENDS="$NP_TEST_DEP pytest pytest-cov"
+        BUILD_DEPENDS="cython $NP_DEP"
+        TEST_DEPENDS="pytest pytest-cov $NP_DEP"
         source multibuild/common_utils.sh
         source multibuild/travis_steps.sh
         echo "------- BEFORE INSTALL --------"
