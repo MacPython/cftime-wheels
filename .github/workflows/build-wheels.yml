@@ -14,13 +14,12 @@ on:
 #    - cron: '0 0 * * 0,3' # 2/weekly
 
 jobs:
-
-   build_macos_linux:
+  build_macos_linux:
 
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-	shell: bash
+        shell: bash
     strategy:
       fail-fast: false
       matrix:
