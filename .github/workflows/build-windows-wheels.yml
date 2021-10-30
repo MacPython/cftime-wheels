@@ -59,6 +59,21 @@ jobs:
       if: startsWith(matrix.os,'ubuntu') && matrix.MB_ML_VER == 2010
       run: |
         echo "DOCKER_TEST_IMAGE=$(echo multibuild/xenial_$PLAT)" >> $GITHUB_ENV
+    - name: Pin Numpy version
+      run: |
+        if [ "$MB_PYTHON_VERSION" == '3.6' ]; then
+          echo "NP_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
+        elif [ "$MB_PYTHON_VERSION" == '3.7' ]; then
+          echo "NP_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
+        elif [ "$MB_PYTHON_VERSION" == '3.8' ]; then
+          echo "NP_DEP=$(echo oldest-supported-numpy)" >> $GITHUB_ENV;
+        elif [ "$MB_PYTHON_VERSION" == '3.9' ]; then
+          echo "NP_DEP=$(echo oldest-supported-numpy)" >> $GITHUB_ENV;
+        elif [ "$MB_PYTHON_VERSION" == '3.10' ]; then
+          echo "NP_DEP=$(echo oldest-supported-numpy)" >> $GITHUB_ENV;
+        else
+          echo "None of the defined python version, use default"
+        fi
     - name: Print some Environment variable
       run: |
         echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
@@ -75,7 +90,7 @@ jobs:
         python -m pip install --upgrade pip
         echo "------- Install Dependencies--------"
         pip install wheel==0.26
-        pip install oldest-supported-numpy cython
+        pip install $NP_DEP cython
         echo "------- Checkout BUILD_COMMIT --------"
         /bin/rm -rf cftime
         git clone https://github.com/Unidata/cftime
@@ -94,7 +109,7 @@ jobs:
     - name: Install Tests Dependencies
       run: |
         # Install the test dependencies
-        pip install oldest-supported-numpy pytest pytest-cov
+        pip install $NP_DEP pytest pytest-cov
         pip install --pre --no-index --find-links ./${REPO_DIR}/dist ${PKG_NAME}
 
     - name: Run Tests
