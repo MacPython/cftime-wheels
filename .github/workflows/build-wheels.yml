@@ -1,94 +1,109 @@
-	# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-	# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-	name: Build and upload wheels
+name: Build and upload wheels
 
-	on:
-	  push:
-	    branches: [ master ]
-	  pull_request:
-	    branches: [ master ]
-	  create:
-	    tags:
-	#  schedule:
-	#    - cron: '0 0 * * 0,3' # 2/weekly
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  create:
+    tags:
+#  schedule:
+#    - cron: '0 0 * * 0,3' # 2/weekly
 
-	jobs:
+jobs:
 
-	  build_macos_linux:
+  build_macos_linux:
 
-	    runs-on: ${{ matrix.os }}
-	    defaults:
-	      run:
-		shell: bash
-	    strategy:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+	shell: bash
+    strategy:
 
-	      fail-fast: false
-	      matrix:
-		python-version: [ "3.6", "3.7", "3.8", "3.9", "3.10" ]
-		os: [ubuntu-latest, macos-latest]
-		platform: [x64, x32, aarch64]
-		exclude:
-		  - os: macos-latest  
-		    platform: x32
-		  - os: ubuntu-latest
-		    platform: aarch64
-		  - os: macos-latest
-		    platform: aarch64
-	    env:
-	      BUILD_COMMIT: v1.5.1.1rel
-	      MB_ML_VER: 2014
-	      REPO_DIR: cftime
-	      PKG_NAME: cftime
-	      UNICODE_WIDTH: 32
-	      MB_PYTHON_VERSION: ${{ matrix.python-version }}
-	      TRAVIS_PYTHON_VERSION: ${{ matrix.python-version }}
-	      TRAVIS_REPO_SLUG: ${{ github.repository }}
-	      TRAVIS_BRANCH: ${{ github.head_ref }}
-	      TRAVIS_PULL_REQUEST: ${{ github.event.number }}
-	      TRAVIS_BUILD_DIR: ${{ github.workspace }}
-	      MULTIBUILD_WHEELS_STAGING_ACCESS: ${{ secrets.MULTIBUILD_WHEELS_STAGING_ACCESS }}
+      fail-fast: false
+      matrix:
+	python-version: [ "3.6", "3.7", "3.8", "3.9", "3.10" ]
+	os: [ubuntu-latest, macos-latest]
+	platform: [x64, x32, aarch64]
+	exclude:
+	  - os: macos-latest  
+	    platform: x32
+	  - os: ubuntu-latest
+	    platform: aarch64
+	  - os: macos-latest
+	    platform: aarch64
+    env:
+      BUILD_COMMIT: v1.5.1.1rel
+      MB_ML_VER: 2014
+      REPO_DIR: cftime
+      PKG_NAME: cftime
+      UNICODE_WIDTH: 32
+      MB_PYTHON_VERSION: ${{ matrix.python-version }}
+      TRAVIS_PYTHON_VERSION: ${{ matrix.python-version }}
+      TRAVIS_REPO_SLUG: ${{ github.repository }}
+      TRAVIS_BRANCH: ${{ github.head_ref }}
+      TRAVIS_PULL_REQUEST: ${{ github.event.number }}
+      TRAVIS_BUILD_DIR: ${{ github.workspace }}
+      MULTIBUILD_WHEELS_STAGING_ACCESS: ${{ secrets.MULTIBUILD_WHEELS_STAGING_ACCESS }}
 
-	    steps:
-	    - uses: actions/checkout@v2
-	      with:
-		submodules: recursive
-	    - name: Set up Python ${{ matrix.python-version }}
-	      uses: actions/setup-python@v2
-	      with:
-		python-version: ${{ matrix.python-version }}
-	    - uses: docker/setup-qemu-action@v1
-	      if: ${{ matrix.platform == 'aarch64' }}
-	      name: Set up QEMU
-	    - name: Setup Environment variables
-	      run: |
-		if [ "schedule" == "${{ github.event_name }}" ] || [ "master" == "$BUILD_COMMIT" ]; then echo "TOKEN=$SCIPY_WHEELS_NIGHTLY_ACCESS" >> $GITHUB_ENV; else echo "TOKEN=$MULTIBUILD_WHEELS_STAGING_ACCESS" >> $GITHUB_ENV; fi
-		if [ "x32" == "${{ matrix.platform }}" ]; then echo "PLAT=i686" >> $GITHUB_ENV; elif [ "aarch64" == "${{ matrix.platform }}" ]; then echo "PLAT=aarch64" >> $GITHUB_ENV; else echo "PLAT=x86_64" >> $GITHUB_ENV; fi
-		if [ "macos-latest" == "${{ matrix.os }}" ]; then echo "TRAVIS_OS_NAME=osx" >> $GITHUB_ENV; else echo "TRAVIS_OS_NAME=${{ matrix.os }}" >> $GITHUB_ENV; fi
-		if [ "schedule" == "${{ github.event_name }}" ]; then echo "TRAVIS_EVENT_TYPE=cron" >> $GITHUB_ENV; else echo "TRAVIS_EVENT_TYPE=${{ github.event_name }}" >> $GITHUB_ENV; fi
-		if [ "schedule" == "${{ github.event_name }}" ]; then echo "BUILD_COMMIT=master" >> $GITHUB_ENV; else echo "BUILD_COMMIT=$BUILD_COMMIT" >> $GITHUB_ENV; fi
-	    - name: Setup Special Environment variables for aarch64
-	      if: startsWith(matrix.platform,'aarch64')
-	      run: |
-		echo "DOCKER_TEST_IMAGE=$(echo multibuild/xenial_arm64v8)" >> $GITHUB_ENV
-	    - name: Print some Environment variable
-	      run: |
-		echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
-		echo "TRAVIS_PULL_REQUEST: ${TRAVIS_PULL_REQUEST}"
-		echo "TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG}"
-		echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
-		echo "TRAVIS_OS_NAME: ${TRAVIS_OS_NAME}"
-		echo "PLAT: ${PLAT}"
-		echo "DOCKER_TEST_IMAGE: ${DOCKER_TEST_IMAGE}"
+    steps:
+    - uses: actions/checkout@v2
+      with:
+	submodules: recursive
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+	python-version: ${{ matrix.python-version }}
+    - uses: docker/setup-qemu-action@v1
+      if: ${{ matrix.platform == 'aarch64' }}
+      name: Set up QEMU
+    - name: Pin Numpy version
+      run: |
+        if [ "$MB_PYTHON_VERSION" == '3.6' ]; then
+          echo "NP_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
+        elif [ "$MB_PYTHON_VERSION" == '3.7' ]; then
+          echo "NP_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
+        elif [ "$MB_PYTHON_VERSION" == '3.8' ]; then
+          echo "NP_DEP=$(echo oldest-supported-numpy)" >> $GITHUB_ENV;
+        elif [ "$MB_PYTHON_VERSION" == '3.9' ]; then
+          echo "NP_DEP=$(echo oldest-supported-numpy)" >> $GITHUB_ENV;
+        elif [ "$MB_PYTHON_VERSION" == '3.10' ]; then
+          echo "NP_DEP=$(echo oldest-supported-numpy)" >> $GITHUB_ENV;
+        else
+          echo "None of the defined python version, use default"
+        fi
+    - name: Setup Environment variables
+      run: |
+	if [ "schedule" == "${{ github.event_name }}" ] || [ "master" == "$BUILD_COMMIT" ]; then echo "TOKEN=$SCIPY_WHEELS_NIGHTLY_ACCESS" >> $GITHUB_ENV; else echo "TOKEN=$MULTIBUILD_WHEELS_STAGING_ACCESS" >> $GITHUB_ENV; fi
+	if [ "x32" == "${{ matrix.platform }}" ]; then echo "PLAT=i686" >> $GITHUB_ENV; elif [ "aarch64" == "${{ matrix.platform }}" ]; then echo "PLAT=aarch64" >> $GITHUB_ENV; else echo "PLAT=x86_64" >> $GITHUB_ENV; fi
+	if [ "macos-latest" == "${{ matrix.os }}" ]; then echo "TRAVIS_OS_NAME=osx" >> $GITHUB_ENV; else echo "TRAVIS_OS_NAME=${{ matrix.os }}" >> $GITHUB_ENV; fi
+	if [ "schedule" == "${{ github.event_name }}" ]; then echo "TRAVIS_EVENT_TYPE=cron" >> $GITHUB_ENV; else echo "TRAVIS_EVENT_TYPE=${{ github.event_name }}" >> $GITHUB_ENV; fi
+	if [ "schedule" == "${{ github.event_name }}" ]; then echo "BUILD_COMMIT=master" >> $GITHUB_ENV; else echo "BUILD_COMMIT=$BUILD_COMMIT" >> $GITHUB_ENV; fi
+    - name: Setup Special Environment variables for aarch64
+      if: startsWith(matrix.platform,'aarch64')
+      run: |
+	echo "DOCKER_TEST_IMAGE=$(echo multibuild/xenial_arm64v8)" >> $GITHUB_ENV
+    - name: Print some Environment variable
+      run: |
+	echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
+	echo "TRAVIS_PULL_REQUEST: ${TRAVIS_PULL_REQUEST}"
+	echo "TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG}"
+	echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
+	echo "TRAVIS_OS_NAME: ${TRAVIS_OS_NAME}"
+	echo "PLAT: ${PLAT}"
+	echo "DOCKER_TEST_IMAGE: ${DOCKER_TEST_IMAGE}"
 
-	    - name: Install VirtualEnv
-	      run: |
-		python -m pip install --upgrade pip
-		pip install virtualenv
-	    - name: Build and Install Wheels
-	      run: |
-		BUILD_DEPENDS="cython numpy==1.17.3 oldest-supported-numpy"
-        TEST_DEPENDS="pytest pytest-cov numpy==1.17.3 oldest-supported-numpy"
+    - name: Install VirtualEnv
+      run: |
+	python -m pip install --upgrade pip
+	pip install virtualenv
+    - name: Build and Install Wheels
+      run: |
+        BUILD_DEPENDS="cython $NP_DEP"
+        TEST_DEPENDS="pytest pytest-cov $NP_DEP"
         source multibuild/common_utils.sh
         source multibuild/travis_steps.sh
         echo "------- BEFORE INSTALL --------"
