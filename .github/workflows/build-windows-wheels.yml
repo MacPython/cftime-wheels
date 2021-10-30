@@ -48,26 +48,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Pin Numpy version
-      run: |
-        if [ "$MB_PYTHON_VERSION" == '3.6' ]; then
-          echo "NP_BUILD_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
-          echo "NP_TEST_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
-        elif [ "$MB_PYTHON_VERSION" == '3.7' ]; then
-          echo "NP_BUILD_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
-          echo "NP_TEST_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
-        elif [ "$MB_PYTHON_VERSION" == '3.8' ]; then
-          echo "NP_BUILD_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
-          echo "NP_TEST_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
-        elif [ "$MB_PYTHON_VERSION" == '3.9' ]; then
-          echo "NP_BUILD_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
-          echo "NP_TEST_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
-        elif [ "$MB_PYTHON_VERSION" == '3.10' ]; then
-          echo "NP_BUILD_DEP=$(echo numpy==1.21.3)" >> $GITHUB_ENV;
-          echo "NP_TEST_DEP=$(echo numpy==1.21.3)" >> $GITHUB_ENV;
-        else
-          echo "None of the defined python version, use default"
-        fi
     - name: Setup Environment variables
       run: |
         if [ "schedule" == "${{ github.event_name }}" ] || [ "master" == "$BUILD_COMMIT" ]; then echo "TOKEN=$SCIPY_WHEELS_NIGHTLY_ACCESS" >> $GITHUB_ENV; else echo "TOKEN=$MULTIBUILD_WHEELS_STAGING_ACCESS" >> $GITHUB_ENV; fi
@@ -95,7 +75,7 @@ jobs:
         python -m pip install --upgrade pip
         echo "------- Install Dependencies--------"
         pip install wheel==0.26
-        pip install $NP_BUILD_DEP cython
+        pip install oldest-available-numpy cython
         echo "------- Checkout BUILD_COMMIT --------"
         /bin/rm -rf cftime
         git clone https://github.com/Unidata/cftime
@@ -114,7 +94,7 @@ jobs:
     - name: Install Tests Dependencies
       run: |
         # Install the test dependencies
-        pip install $NP_TEST_DEP pytest pytest-cov
+        pip install oldest-available-numpy pytest pytest-cov
         pip install --pre --no-index --find-links ./${REPO_DIR}/dist ${PKG_NAME}
 
     - name: Run Tests
