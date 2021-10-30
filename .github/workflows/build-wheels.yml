@@ -50,11 +50,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-	submodules: recursive
+        submodules: recursive
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-	python-version: ${{ matrix.python-version }}
+        python-version: ${{ matrix.python-version }}
     - uses: docker/setup-qemu-action@v1
       if: ${{ matrix.platform == 'aarch64' }}
       name: Set up QEMU
@@ -75,29 +75,29 @@ jobs:
         fi
     - name: Setup Environment variables
       run: |
-	if [ "schedule" == "${{ github.event_name }}" ] || [ "master" == "$BUILD_COMMIT" ]; then echo "TOKEN=$SCIPY_WHEELS_NIGHTLY_ACCESS" >> $GITHUB_ENV; else echo "TOKEN=$MULTIBUILD_WHEELS_STAGING_ACCESS" >> $GITHUB_ENV; fi
-	if [ "x32" == "${{ matrix.platform }}" ]; then echo "PLAT=i686" >> $GITHUB_ENV; elif [ "aarch64" == "${{ matrix.platform }}" ]; then echo "PLAT=aarch64" >> $GITHUB_ENV; else echo "PLAT=x86_64" >> $GITHUB_ENV; fi
-	if [ "macos-latest" == "${{ matrix.os }}" ]; then echo "TRAVIS_OS_NAME=osx" >> $GITHUB_ENV; else echo "TRAVIS_OS_NAME=${{ matrix.os }}" >> $GITHUB_ENV; fi
-	if [ "schedule" == "${{ github.event_name }}" ]; then echo "TRAVIS_EVENT_TYPE=cron" >> $GITHUB_ENV; else echo "TRAVIS_EVENT_TYPE=${{ github.event_name }}" >> $GITHUB_ENV; fi
-	if [ "schedule" == "${{ github.event_name }}" ]; then echo "BUILD_COMMIT=master" >> $GITHUB_ENV; else echo "BUILD_COMMIT=$BUILD_COMMIT" >> $GITHUB_ENV; fi
+        if [ "schedule" == "${{ github.event_name }}" ] || [ "master" == "$BUILD_COMMIT" ]; then echo "TOKEN=$SCIPY_WHEELS_NIGHTLY_ACCESS" >> $GITHUB_ENV; else echo "TOKEN=$MULTIBUILD_WHEELS_STAGING_ACCESS" >> $GITHUB_ENV; fi
+        if [ "x32" == "${{ matrix.platform }}" ]; then echo "PLAT=i686" >> $GITHUB_ENV; elif [ "aarch64" == "${{ matrix.platform }}" ]; then echo "PLAT=aarch64" >> $GITHUB_ENV; else echo "PLAT=x86_64" >> $GITHUB_ENV; fi
+        if [ "macos-latest" == "${{ matrix.os }}" ]; then echo "TRAVIS_OS_NAME=osx" >> $GITHUB_ENV; else echo "TRAVIS_OS_NAME=${{ matrix.os }}" >> $GITHUB_ENV; fi
+        if [ "schedule" == "${{ github.event_name }}" ]; then echo "TRAVIS_EVENT_TYPE=cron" >> $GITHUB_ENV; else echo "TRAVIS_EVENT_TYPE=${{ github.event_name }}" >> $GITHUB_ENV; fi
+        if [ "schedule" == "${{ github.event_name }}" ]; then echo "BUILD_COMMIT=master" >> $GITHUB_ENV; else echo "BUILD_COMMIT=$BUILD_COMMIT" >> $GITHUB_ENV; fi
     - name: Setup Special Environment variables for aarch64
       if: startsWith(matrix.platform,'aarch64')
       run: |
-	echo "DOCKER_TEST_IMAGE=$(echo multibuild/xenial_arm64v8)" >> $GITHUB_ENV
+        echo "DOCKER_TEST_IMAGE=$(echo multibuild/xenial_arm64v8)" >> $GITHUB_ENV
     - name: Print some Environment variable
       run: |
-	echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
-	echo "TRAVIS_PULL_REQUEST: ${TRAVIS_PULL_REQUEST}"
-	echo "TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG}"
-	echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
-	echo "TRAVIS_OS_NAME: ${TRAVIS_OS_NAME}"
-	echo "PLAT: ${PLAT}"
-	echo "DOCKER_TEST_IMAGE: ${DOCKER_TEST_IMAGE}"
+       echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
+       echo "TRAVIS_PULL_REQUEST: ${TRAVIS_PULL_REQUEST}"
+       echo "TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG}"
+       echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
+       echo "TRAVIS_OS_NAME: ${TRAVIS_OS_NAME}"
+       echo "PLAT: ${PLAT}"
+       echo "DOCKER_TEST_IMAGE: ${DOCKER_TEST_IMAGE}"
 
     - name: Install VirtualEnv
       run: |
-	python -m pip install --upgrade pip
-	pip install virtualenv
+        python -m pip install --upgrade pip
+        pip install virtualenv
     - name: Build and Install Wheels
       run: |
         BUILD_DEPENDS="cython $NP_DEP"
