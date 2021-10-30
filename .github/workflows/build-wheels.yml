@@ -25,7 +25,7 @@ jobs:
 
       fail-fast: false
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9"]
+        python-version: [ "3.7", "3.8", "3.9", "3.10" ]
         os: [ubuntu-latest, macos-latest]
         platform: [x64, x32, aarch64]
         MB_ML_VER: [1,2014]
@@ -74,6 +74,9 @@ jobs:
           echo "NP_BUILD_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
           echo "NP_TEST_DEP=$(echo numpy==1.17.3)" >> $GITHUB_ENV;
         elif [ "$MB_PYTHON_VERSION" == '3.9' ]; then
+          echo "NP_BUILD_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
+          echo "NP_TEST_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
+        elif [ "$MB_PYTHON_VERSION" == '3.10' ]; then
           echo "NP_BUILD_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
           echo "NP_TEST_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
         else
