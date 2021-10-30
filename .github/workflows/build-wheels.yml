@@ -15,7 +15,7 @@ on:
 
 jobs:
 
-  build_macos_linux:
+   build_macos_linux:
 
     runs-on: ${{ matrix.os }}
     defaults:
