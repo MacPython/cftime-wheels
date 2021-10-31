@@ -29,8 +29,6 @@ jobs:
         exclude:
           - os: macos-latest  
             platform: x32
-          - os: ubuntu-latest
-            platform: aarch64
           - os: macos-latest
             platform: aarch64
     env:
