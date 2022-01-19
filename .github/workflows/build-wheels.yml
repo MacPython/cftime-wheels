@@ -114,7 +114,7 @@ jobs:
         echo "------- BEFORE INSTALL --------"
         before_install
         echo "------- CLEAN CODE --------"
-        clean_code $REPO_DIR $BUILD_COMMIT
+        git clone https://github.com/Unidata/${REPO_DIR}.git 
         pushd $REPO_DIR
         echo "in $PWD"
         git checkout master
