@@ -114,6 +114,8 @@ jobs:
         echo "------- BEFORE INSTALL --------"
         before_install
         echo "------- CLEAN CODE --------"
+        /bin/rm -rf $REPO_DIR
+        git clone https://github.com/Unidata/${REPO_DIR}
         cd $REPO_DIR
         git checkout master
         git pull
