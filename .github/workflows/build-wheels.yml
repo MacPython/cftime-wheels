@@ -115,6 +115,14 @@ jobs:
         before_install
         echo "------- CLEAN CODE --------"
         clean_code $REPO_DIR $BUILD_COMMIT
+        pushd $REPO_DIR
+        echo "in $PWD"
+        git checkout master
+        git pull
+        git log -p | head -20
+        git tag
+        git checkout $BUILD_COMMIT
+        popd
         echo "------- BUILD WHEEL --------"
         build_wheel $REPO_DIR $PLAT
         echo "------- INSTALL_RUN --------"
