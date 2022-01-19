@@ -114,15 +114,11 @@ jobs:
         echo "------- BEFORE INSTALL --------"
         before_install
         echo "------- CLEAN CODE --------"
-        git clone https://github.com/Unidata/${REPO_DIR}.git 
-        pushd $REPO_DIR
-        echo "in $PWD"
+        cd $REPO_DIR
         git checkout master
         git pull
-        git log -p | head -20
-        git tag
         git checkout $BUILD_COMMIT
-        popd
+        cd ..
         echo "------- BUILD WHEEL --------"
         build_wheel $REPO_DIR $PLAT
         echo "------- INSTALL_RUN --------"
