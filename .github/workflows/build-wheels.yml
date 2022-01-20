@@ -87,6 +87,7 @@ jobs:
         if [ "schedule" == "${{ github.event_name }}" ]; then echo "BUILD_COMMIT=master" >> $GITHUB_ENV; else echo "BUILD_COMMIT=$BUILD_COMMIT" >> $GITHUB_ENV; fi
         # make universal2 wheels on macos 10.15 by cross-compiling
         if [ "macos-10.15" == "${{ matrix.os }}" ]; then echo "PLAT=universal2" >> $GITHUB_ENV; fi
+        if [ "macos-10.15" == "${{ matrix.os }}" ]; then echo "MACOSX_DEPLOYMENT_TARGET=11.0" >> $GITHUB_ENV; fi
     - name: Setup Special Environment variables for aarch64
       if: startsWith(matrix.platform,'aarch64')
       run: |
