@@ -123,7 +123,7 @@ jobs:
         git checkout master
         git pull
         git checkout $BUILD_COMMIT
-        sed -i -e "s/numpy/oldest-supported-numpy/g" pyproject.toml 
+        #sed -i -e "s/numpy/oldest-supported-numpy/g" pyproject.toml 
         cd ..
         echo "------- BUILD WHEEL --------"
         build_wheel $REPO_DIR $PLAT
