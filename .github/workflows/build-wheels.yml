@@ -111,7 +111,7 @@ jobs:
     - name: Build and Install Wheels
       run: |
         BUILD_DEPENDS="cython $NP_DEP"
-        TEST_DEPENDS="pytest pytest-cov $NP_DEP"
+        TEST_DEPENDS="pip>21.2.2 pytest pytest-cov $NP_DEP"
         source multibuild/common_utils.sh
         source multibuild/travis_steps.sh
         echo "------- BEFORE INSTALL --------"
