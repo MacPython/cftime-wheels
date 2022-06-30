@@ -93,7 +93,7 @@ jobs:
     - name: Setup Special Environment variables for aarch64
       if: startsWith(matrix.platform,'aarch64')
       run: |
-        echo "DOCKER_TEST_IMAGE=$(echo multibuild/xenial_arm64v8)" >> $GITHUB_ENV
+        echo "DOCKER_TEST_IMAGE=$(echo multibuild/focal_arm64v8)" >> $GITHUB_ENV
     - name: Print some Environment variable
       run: |
        echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
@@ -110,8 +110,8 @@ jobs:
         pip install virtualenv
     - name: Build and Install Wheels
       run: |
-        BUILD_DEPENDS="cython $NP_DEP"
-        TEST_DEPENDS="pytest pytest-cov $NP_DEP"
+        BUILD_DEPENDS="$NP_DEP cython"
+        TEST_DEPENDS="$NP_DEP pytest pytest-cov"
         source multibuild/common_utils.sh
         source multibuild/travis_steps.sh
         echo "------- BEFORE INSTALL --------"
