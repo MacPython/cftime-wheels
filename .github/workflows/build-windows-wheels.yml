@@ -29,7 +29,7 @@ jobs:
     env:
       REPO_DIR: cftime
       PKG_NAME: cftime
-      BUILD_COMMIT: v1.6.1rel
+      BUILD_COMMIT: v1.6.2rel
       UNICODE_WIDTH: 32
       MB_PYTHON_VERSION: ${{ matrix.python-version }}
       TRAVIS_PYTHON_VERSION: ${{ matrix.python-version }}
